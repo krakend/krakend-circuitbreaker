@@ -24,7 +24,6 @@ import (
 
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
-	"github.com/eapache/go-resiliency/breaker"
 
 	"github.com/devopsfaith/krakend-circuitbreaker/eapache"
 )
@@ -42,7 +41,7 @@ func NewMiddleware(remote *config.Backend) proxy.Middleware {
 	if data == eapache.ZeroCfg {
 		return proxy.EmptyMiddleware
 	}
-	cb := breaker.New(data.Error, data.Success, data.Timeout)
+	cb := eapache.NewCircuitBreaker(data)
 
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {

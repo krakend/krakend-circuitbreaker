@@ -21,10 +21,10 @@ and https://martinfowler.com/bliki/CircuitBreaker.html for more details.
 package eapache
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/devopsfaith/krakend/config"
+	"github.com/eapache/go-resiliency/breaker"
 )
 
 // Namespace is the key to use to store and access the custom config data
@@ -51,7 +51,6 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	if !ok {
 		return ZeroCfg
 	}
-	fmt.Println(tmp)
 	cfg := Config{}
 	if v, ok := tmp["error"]; ok {
 		cfg.Error = int(v.(float64))
@@ -65,4 +64,9 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 		}
 	}
 	return cfg
+}
+
+// NewCircuitBreaker builds a eapache circuit breaker with the injected config
+func NewCircuitBreaker(cfg Config) *breaker.Breaker {
+	return breaker.New(cfg.Error, cfg.Success, cfg.Timeout)
 }
