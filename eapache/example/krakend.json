@@ -1,0 +1,44 @@
+{
+    "version": 1,
+    "name": "TV shows gateway",
+    "port": 8080,
+    "cache_ttl": 3600,
+    "timeout": "3s",
+    "endpoints": [
+        {
+            "endpoint": "/showrss/{id}",
+            "backend": [
+                {
+                    "host": [
+                        "http://showrssi.nfo/",
+                        "http://showrss.info/"
+                    ],
+                    "url_pattern": "/user/schedule/{id}.rss",
+                    "encoding": "rss",
+                    "extra_config": {
+                        "github.com/devopsfaith/krakend-circuitbreaker/eapache": {
+                            "error": 1,
+                            "timeout": "10s",
+                            "success": 2
+                        }
+                    }
+                },
+                {
+                    "host": [
+                        "http://showrssi.nfo/",
+                        "http://showrss.info/"
+                    ],
+                    "url_pattern": "/user/{id}.rss",
+                    "encoding": "rss",
+                    "extra_config": {
+                        "github.com/devopsfaith/krakend-circuitbreaker/eapache": {
+                            "error": 1,
+                            "timeout": "10s",
+                            "success": 2
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
