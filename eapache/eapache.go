@@ -7,9 +7,9 @@ Sample backend extra config
 	"extra_config": {
 		...
 		"github.com/devopsfaith/krakend-circuitbreaker/eapache": {
-			"Interval": 60,
-			"Timeout": 10,
-			"MaxErrors": 5
+			"success": 60,
+			"timeout": "10s",
+			"error": 5
 		},
 		...
 	},

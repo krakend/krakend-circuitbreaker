@@ -7,9 +7,9 @@ Sample backend extra config
 	"extra_config": {
 		...
 		"github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
-			"Interval": 60,
-			"Timeout": 10,
-			"MaxErrors": 5
+			"interval": 60,
+			"timeout": 10,
+			"maxErrors": 5
 		},
 		...
 	},
