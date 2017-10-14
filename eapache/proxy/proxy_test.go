@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sync/atomic"
 	"testing"
-	"time"
 
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
@@ -52,7 +51,13 @@ func TestNewMiddleware_zeroConfig(t *testing.T) {
 func TestNewMiddleware_ok(t *testing.T) {
 	resp := proxy.Response{}
 	mdw := NewMiddleware(&config.Backend{
-		ExtraConfig: map[string]interface{}{eapache.Namespace: eapache.Config{Error: 1, Success: 1, Timeout: time.Second}},
+		ExtraConfig: map[string]interface{}{
+			eapache.Namespace: map[string]interface{}{
+				"error":   1.0,
+				"success": 1.0,
+				"timeout": "1s",
+			},
+		},
 	})
 	p := mdw(dummyProxy(&resp, nil))
 
@@ -76,7 +81,13 @@ func TestNewMiddleware_ko(t *testing.T) {
 	expectedErr := fmt.Errorf("Some error")
 	calls := uint64(0)
 	mdw := NewMiddleware(&config.Backend{
-		ExtraConfig: map[string]interface{}{eapache.Namespace: eapache.Config{Error: 1, Success: 0, Timeout: time.Second}},
+		ExtraConfig: map[string]interface{}{
+			eapache.Namespace: map[string]interface{}{
+				"error":   1.0,
+				"success": 0.0,
+				"timeout": "1s",
+			},
+		},
 	})
 	p := mdw(func(_ context.Context, _ *proxy.Request) (*proxy.Response, error) {
 		total := atomic.AddUint64(&calls, 1)

@@ -50,7 +50,13 @@ func TestNewMiddleware_zeroConfig(t *testing.T) {
 func TestNewMiddleware_ok(t *testing.T) {
 	resp := proxy.Response{}
 	mdw := NewMiddleware(&config.Backend{
-		ExtraConfig: map[string]interface{}{gcb.Namespace: gcb.Config{Interval: 100, Timeout: 100, MaxErrors: 1}},
+		ExtraConfig: map[string]interface{}{
+			gcb.Namespace: map[string]interface{}{
+				"interval":  100.0,
+				"timeout":   100.0,
+				"maxErrors": 1.0,
+			},
+		},
 	})
 	p := mdw(dummyProxy(&resp, nil))
 
@@ -74,7 +80,13 @@ func TestNewMiddleware_ko(t *testing.T) {
 	expectedErr := fmt.Errorf("Some error")
 	calls := uint64(0)
 	mdw := NewMiddleware(&config.Backend{
-		ExtraConfig: map[string]interface{}{gcb.Namespace: gcb.Config{Interval: 100, Timeout: 100, MaxErrors: 1}},
+		ExtraConfig: map[string]interface{}{
+			gcb.Namespace: map[string]interface{}{
+				"interval":  100.0,
+				"timeout":   100.0,
+				"maxErrors": 1.0,
+			},
+		},
 	})
 	p := mdw(func(_ context.Context, _ *proxy.Request) (*proxy.Response, error) {
 		total := atomic.AddUint64(&calls, 1)

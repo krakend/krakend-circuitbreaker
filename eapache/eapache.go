@@ -21,6 +21,7 @@ and https://martinfowler.com/bliki/CircuitBreaker.html for more details.
 package eapache
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/devopsfaith/krakend/config"
@@ -42,10 +43,26 @@ var ZeroCfg = Config{}
 // ConfigGetter implements the config.ConfigGetter interface. It parses the extra config for the
 // eapache adapter and returns a ZeroCfg if something goes wrong.
 func ConfigGetter(e config.ExtraConfig) interface{} {
-	if v, ok := e[Namespace]; ok {
-		if cfg, ok := v.(Config); ok {
-			return cfg
+	v, ok := e[Namespace]
+	if !ok {
+		return ZeroCfg
+	}
+	tmp, ok := v.(map[string]interface{})
+	if !ok {
+		return ZeroCfg
+	}
+	fmt.Println(tmp)
+	cfg := Config{}
+	if v, ok := tmp["error"]; ok {
+		cfg.Error = int(v.(float64))
+	}
+	if v, ok := tmp["success"]; ok {
+		cfg.Success = int(v.(float64))
+	}
+	if v, ok := tmp["timeout"]; ok {
+		if d, err := time.ParseDuration(v.(string)); err == nil {
+			cfg.Timeout = d
 		}
 	}
-	return ZeroCfg
+	return cfg
 }

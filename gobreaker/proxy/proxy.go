@@ -31,6 +31,13 @@ import (
 	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
 )
 
+// BackendFactory adds a cb middleware wrapping the internal factory
+func BackendFactory(next proxy.BackendFactory) proxy.BackendFactory {
+	return func(cfg *config.Backend) proxy.Proxy {
+		return NewMiddleware(cfg)(next(cfg))
+	}
+}
+
 // NewMiddleware builds a middleware based on the extra config params or fallbacks to the next proxy
 func NewMiddleware(remote *config.Backend) proxy.Middleware {
 	data := gcb.ConfigGetter(remote.ExtraConfig).(gcb.Config)

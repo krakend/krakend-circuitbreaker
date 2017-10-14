@@ -5,7 +5,6 @@ import (
 	"errors"
 	"sync/atomic"
 	"testing"
-	"time"
 
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
@@ -46,7 +45,11 @@ func BenchmarkNewCircuitBreakerMiddleware_burst(b *testing.B) {
 
 var cfg = config.Backend{
 	ExtraConfig: map[string]interface{}{
-		eapache.Namespace: eapache.Config{Error: 10, Success: 10, Timeout: time.Second},
+		eapache.Namespace: map[string]interface{}{
+			"error":   10.0,
+			"success": 10.0,
+			"timeout": "1s",
+		},
 	},
 }
 

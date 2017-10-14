@@ -45,7 +45,11 @@ func BenchmarkNewCircuitBreakerMiddleware_burst(b *testing.B) {
 
 var cfg = config.Backend{
 	ExtraConfig: map[string]interface{}{
-		gcb.Namespace: gcb.Config{Interval: 100, Timeout: 100, MaxErrors: 1},
+		gcb.Namespace: map[string]interface{}{
+			"interval":  100.0,
+			"timeout":   100.0,
+			"maxErrors": 1.0,
+		},
 	},
 }
 

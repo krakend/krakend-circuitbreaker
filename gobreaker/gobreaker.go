@@ -43,12 +43,25 @@ var ZeroCfg = Config{}
 // ConfigGetter implements the config.ConfigGetter interface. It parses the extra config for the
 // gobreaker adapter and returns a ZeroCfg if something goes wrong.
 func ConfigGetter(e config.ExtraConfig) interface{} {
-	if v, ok := e[Namespace]; ok {
-		if cfg, ok := v.(Config); ok {
-			return cfg
-		}
+	v, ok := e[Namespace]
+	if !ok {
+		return ZeroCfg
 	}
-	return ZeroCfg
+	tmp, ok := v.(map[string]interface{})
+	if !ok {
+		return ZeroCfg
+	}
+	cfg := Config{}
+	if v, ok := tmp["interval"]; ok {
+		cfg.Interval = int(v.(float64))
+	}
+	if v, ok := tmp["timeout"]; ok {
+		cfg.Timeout = int(v.(float64))
+	}
+	if v, ok := tmp["maxErrors"]; ok {
+		cfg.MaxErrors = int(v.(float64))
+	}
+	return cfg
 }
 
 // NewCircuitBreaker builds a gobreaker circuit breaker with the injected config
