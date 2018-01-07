@@ -2,7 +2,7 @@
 
 A collection of circuit breaker adaptors for the [KrakenD](https://github.com/devopsfaith/krakend) framework
 
-**this package requires KrakenD >= 0.4**
+**Notice: this package requires KrakenD >= 0.4**
 
 ### gobreaker
 
