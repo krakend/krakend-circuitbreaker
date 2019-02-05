@@ -65,8 +65,8 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	if v, ok := tmp["maxErrors"]; ok {
 		cfg.MaxErrors = int(v.(float64))
 	}
-	v, ok = tmp["logStatusChange"].(bool)
-	cfg.LogStatusChange = ok && v.(bool)
+	value, ok := tmp["logStatusChange"].(bool)
+	cfg.LogStatusChange = ok && value
 
 	return cfg
 }
@@ -79,11 +79,13 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBrea
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
 			return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
 		},
-		OnStateChange: func(name string, from gobreaker.State, to gobreaker.State) {
-			if cfg.LogStatusChange {
-				logger.Info(fmt.Sprintf("circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
-			}
-		},
 	}
+
+	if cfg.LogStatusChange {
+		settings.OnStateChange = func(name string, from gobreaker.State, to gobreaker.State) {
+			logger.Warning(fmt.Sprintf("circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
+		}
+	}
+
 	return gobreaker.NewCircuitBreaker(settings)
 }
