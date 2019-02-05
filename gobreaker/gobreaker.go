@@ -65,9 +65,9 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	if v, ok := tmp["maxErrors"]; ok {
 		cfg.MaxErrors = int(v.(float64))
 	}
-	if v, ok := tmp["logStatusChange"]; ok {
-		cfg.LogStatusChange = bool(v.(bool))
-	}
+	v, ok = tmp["logStatusChange"].(bool)
+	cfg.LogStatusChange = ok && v.(bool)
+
 	return cfg
 }
 
