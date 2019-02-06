@@ -10,6 +10,7 @@ import (
 	"github.com/devopsfaith/krakend/proxy"
 
 	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gologging "github.com/op/go-logging"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {
@@ -18,7 +19,8 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 			t.Errorf("The code did not panic\n")
 		}
 	}()
-	NewMiddleware(&config.Backend{})(proxy.NoopProxy, proxy.NoopProxy)
+
+	NewMiddleware(&config.Backend{}, gologging.MustGetLogger("proxy_test"))(proxy.NoopProxy, proxy.NoopProxy)
 }
 
 func TestNewMiddleware_zeroConfig(t *testing.T) {
@@ -27,7 +29,7 @@ func TestNewMiddleware_zeroConfig(t *testing.T) {
 		&config.Backend{ExtraConfig: map[string]interface{}{gcb.Namespace: 42}},
 	} {
 		resp := proxy.Response{}
-		mdw := NewMiddleware(cfg)
+		mdw := NewMiddleware(cfg, gologging.MustGetLogger("proxy_test"))
 		p := mdw(dummyProxy(&resp, nil))
 
 		request := proxy.Request{
@@ -57,7 +59,7 @@ func TestNewMiddleware_ok(t *testing.T) {
 				"maxErrors": 1.0,
 			},
 		},
-	})
+	}, gologging.MustGetLogger("proxy_test"))
 	p := mdw(dummyProxy(&resp, nil))
 
 	request := proxy.Request{
@@ -82,12 +84,13 @@ func TestNewMiddleware_ko(t *testing.T) {
 	mdw := NewMiddleware(&config.Backend{
 		ExtraConfig: map[string]interface{}{
 			gcb.Namespace: map[string]interface{}{
-				"interval":  100.0,
-				"timeout":   100.0,
-				"maxErrors": 1.0,
+				"interval":        100.0,
+				"timeout":         100.0,
+				"maxErrors":       1.0,
+				"logStatusChange": true,
 			},
 		},
-	})
+	}, gologging.MustGetLogger("proxy_test"))
 	p := mdw(func(_ context.Context, _ *proxy.Request) (*proxy.Response, error) {
 		total := atomic.AddUint64(&calls, 1)
 		if total > 2 {

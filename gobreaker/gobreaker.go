@@ -7,9 +7,10 @@ Sample backend extra config
 	"extra_config": {
 		...
 		"github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
-			"interval": 60,
-			"timeout": 10,
-			"maxErrors": 5
+			"interval":        60,
+			"timeout":         10,
+			"maxErrors":       5,
+			"logStatusChange": true,
 		},
 		...
 	},
@@ -21,9 +22,11 @@ and https://martinfowler.com/bliki/CircuitBreaker.html for more details.
 package gobreaker
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/devopsfaith/krakend/config"
+	"github.com/devopsfaith/krakend/logging"
 	"github.com/sony/gobreaker"
 )
 
@@ -32,9 +35,10 @@ const Namespace = "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
 
 // Config is the custom config struct containing the params for the sony/gobreaker package
 type Config struct {
-	Interval  int
-	Timeout   int
-	MaxErrors int
+	Interval        int
+	Timeout         int
+	MaxErrors       int
+	LogStatusChange bool
 }
 
 // ZeroCfg is the zero value for the Config struct
@@ -61,11 +65,14 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	if v, ok := tmp["maxErrors"]; ok {
 		cfg.MaxErrors = int(v.(float64))
 	}
+	value, ok := tmp["logStatusChange"].(bool)
+	cfg.LogStatusChange = ok && value
+
 	return cfg
 }
 
 // NewCircuitBreaker builds a gobreaker circuit breaker with the injected config
-func NewCircuitBreaker(cfg Config) *gobreaker.CircuitBreaker {
+func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBreaker {
 	settings := gobreaker.Settings{
 		Interval: time.Duration(cfg.Interval) * time.Second,
 		Timeout:  time.Duration(cfg.Timeout) * time.Second,
@@ -73,5 +80,12 @@ func NewCircuitBreaker(cfg Config) *gobreaker.CircuitBreaker {
 			return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
 		},
 	}
+
+	if cfg.LogStatusChange {
+		settings.OnStateChange = func(name string, from gobreaker.State, to gobreaker.State) {
+			logger.Warning(fmt.Sprintf("circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
+		}
+	}
+
 	return gobreaker.NewCircuitBreaker(settings)
 }

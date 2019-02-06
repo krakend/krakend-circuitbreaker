@@ -10,10 +10,11 @@ import (
 	"github.com/devopsfaith/krakend/proxy"
 
 	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gologging "github.com/op/go-logging"
 )
 
 func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {
-	p := NewMiddleware(&cfg)(dummyProxy(&proxy.Response{}, nil))
+	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(dummyProxy(&proxy.Response{}, nil))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
@@ -23,7 +24,7 @@ func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {
 }
 
 func BenchmarkNewCircuitBreakerMiddleware_ko(b *testing.B) {
-	p := NewMiddleware(&cfg)(dummyProxy(nil, errors.New("sample error")))
+	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(dummyProxy(nil, errors.New("sample error")))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
@@ -34,7 +35,7 @@ func BenchmarkNewCircuitBreakerMiddleware_ko(b *testing.B) {
 
 func BenchmarkNewCircuitBreakerMiddleware_burst(b *testing.B) {
 	err := errors.New("sample error")
-	p := NewMiddleware(&cfg)(burstProxy(&proxy.Response{}, err, 100, 6))
+	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(burstProxy(&proxy.Response{}, err, 100, 6))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
