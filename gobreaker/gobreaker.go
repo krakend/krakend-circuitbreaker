@@ -57,13 +57,28 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	}
 	cfg := Config{}
 	if v, ok := tmp["interval"]; ok {
-		cfg.Interval = int(v.(float64))
+		switch i := v.(type) {
+		case int:
+			cfg.Interval = i
+		case float64:
+			cfg.Interval = int(i)
+		}
 	}
 	if v, ok := tmp["timeout"]; ok {
-		cfg.Timeout = int(v.(float64))
+		switch i := v.(type) {
+		case int:
+			cfg.Timeout = i
+		case float64:
+			cfg.Timeout = int(i)
+		}
 	}
 	if v, ok := tmp["maxErrors"]; ok {
-		cfg.MaxErrors = int(v.(float64))
+		switch i := v.(type) {
+		case int:
+			cfg.MaxErrors = i
+		case float64:
+			cfg.MaxErrors = int(i)
+		}
 	}
 	value, ok := tmp["logStatusChange"].(bool)
 	cfg.LogStatusChange = ok && value
