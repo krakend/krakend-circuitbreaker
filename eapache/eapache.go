@@ -53,10 +53,20 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	}
 	cfg := Config{}
 	if v, ok := tmp["error"]; ok {
-		cfg.Error = int(v.(float64))
+		switch i := v.(type) {
+		case int:
+			cfg.Error = i
+		case float64:
+			cfg.Error = int(i)
+		}
 	}
 	if v, ok := tmp["success"]; ok {
-		cfg.Success = int(v.(float64))
+		switch i := v.(type) {
+		case int:
+			cfg.Success = i
+		case float64:
+			cfg.Success = int(i)
+		}
 	}
 	if v, ok := tmp["timeout"]; ok {
 		if d, err := time.ParseDuration(v.(string)); err == nil {
