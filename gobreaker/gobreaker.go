@@ -35,6 +35,7 @@ const Namespace = "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
 
 // Config is the custom config struct containing the params for the sony/gobreaker package
 type Config struct {
+	Name            string
 	Interval        int
 	Timeout         int
 	MaxErrors       int
@@ -56,6 +57,11 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 		return ZeroCfg
 	}
 	cfg := Config{}
+	if v, ok := tmp["name"]; ok {
+		if name, ok := v.(string); ok {
+			cfg.Name = name
+		}
+	}
 	if v, ok := tmp["interval"]; ok {
 		switch i := v.(type) {
 		case int:
@@ -89,6 +95,7 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 // NewCircuitBreaker builds a gobreaker circuit breaker with the injected config
 func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBreaker {
 	settings := gobreaker.Settings{
+		Name:     cfg.Name,
 		Interval: time.Duration(cfg.Interval) * time.Second,
 		Timeout:  time.Duration(cfg.Timeout) * time.Second,
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
