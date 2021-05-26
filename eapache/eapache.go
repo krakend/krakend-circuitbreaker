@@ -23,8 +23,8 @@ package eapache
 import (
 	"time"
 
-	"github.com/devopsfaith/krakend/config"
 	"github.com/eapache/go-resiliency/breaker"
+	"github.com/luraproject/lura/config"
 )
 
 // Namespace is the key to use to store and access the custom config data
