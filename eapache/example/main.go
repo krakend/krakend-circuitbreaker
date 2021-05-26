@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/devopsfaith/krakend/config"
-	"github.com/devopsfaith/krakend/logging"
-	"github.com/devopsfaith/krakend/proxy"
-	krakendgin "github.com/devopsfaith/krakend/router/gin"
-	"github.com/devopsfaith/krakend/transport/http/client"
 	"github.com/gin-gonic/gin"
+	"github.com/luraproject/lura/config"
+	"github.com/luraproject/lura/logging"
+	"github.com/luraproject/lura/proxy"
+	krakendgin "github.com/luraproject/lura/router/gin"
+	"github.com/luraproject/lura/transport/http/client"
 
 	cbproxy "github.com/devopsfaith/krakend-circuitbreaker/eapache/proxy"
 )

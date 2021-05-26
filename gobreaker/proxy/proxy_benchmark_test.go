@@ -6,8 +6,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/devopsfaith/krakend/config"
-	"github.com/devopsfaith/krakend/proxy"
+	"github.com/luraproject/lura/config"
+	"github.com/luraproject/lura/proxy"
 
 	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
 	gologging "github.com/op/go-logging"

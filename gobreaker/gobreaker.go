@@ -25,8 +25,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/devopsfaith/krakend/config"
-	"github.com/devopsfaith/krakend/logging"
+	"github.com/luraproject/lura/config"
+	"github.com/luraproject/lura/logging"
 	"github.com/sony/gobreaker"
 )
 
