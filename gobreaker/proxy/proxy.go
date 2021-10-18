@@ -24,6 +24,7 @@ package proxy
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/luraproject/lura/config"
 	"github.com/luraproject/lura/logging"
@@ -46,6 +47,8 @@ func NewMiddleware(remote *config.Backend, logger logging.Logger) proxy.Middlewa
 		return proxy.EmptyMiddleware
 	}
 	cb := gcb.NewCircuitBreaker(data, logger)
+
+	logger.Debug(fmt.Sprintf("[BACKEND: %s][CB] Creating the circuit breaker named '%s'", remote.URLPattern, data.Name))
 
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {

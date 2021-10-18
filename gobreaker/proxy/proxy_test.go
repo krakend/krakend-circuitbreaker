@@ -54,9 +54,9 @@ func TestNewMiddleware_ok(t *testing.T) {
 	mdw := NewMiddleware(&config.Backend{
 		ExtraConfig: map[string]interface{}{
 			gcb.Namespace: map[string]interface{}{
-				"interval":  100.0,
-				"timeout":   100.0,
-				"maxErrors": 1.0,
+				"interval":   100.0,
+				"timeout":    100.0,
+				"max_errors": 1.0,
 			},
 		},
 	}, gologging.MustGetLogger("proxy_test"))
@@ -84,10 +84,10 @@ func TestNewMiddleware_ko(t *testing.T) {
 	mdw := NewMiddleware(&config.Backend{
 		ExtraConfig: map[string]interface{}{
 			gcb.Namespace: map[string]interface{}{
-				"interval":        100.0,
-				"timeout":         100.0,
-				"maxErrors":       1.0,
-				"logStatusChange": true,
+				"interval":          100.0,
+				"timeout":           100.0,
+				"max_errors":        1.0,
+				"log_status_change": true,
 			},
 		},
 	}, gologging.MustGetLogger("proxy_test"))

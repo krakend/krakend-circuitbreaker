@@ -9,8 +9,8 @@ Sample backend extra config
 		"github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
 			"interval":        60,
 			"timeout":         10,
-			"maxErrors":       5,
-			"logStatusChange": true,
+			"max_errors":       5,
+			"log_status_change": true,
 		},
 		...
 	},
@@ -78,7 +78,7 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 			cfg.Timeout = int(i)
 		}
 	}
-	if v, ok := tmp["maxErrors"]; ok {
+	if v, ok := tmp["max_errors"]; ok {
 		switch i := v.(type) {
 		case int:
 			cfg.MaxErrors = i
@@ -86,7 +86,7 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 			cfg.MaxErrors = int(i)
 		}
 	}
-	value, ok := tmp["logStatusChange"].(bool)
+	value, ok := tmp["log_status_change"].(bool)
 	cfg.LogStatusChange = ok && value
 
 	return cfg
@@ -105,7 +105,7 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBrea
 
 	if cfg.LogStatusChange {
 		settings.OnStateChange = func(name string, from gobreaker.State, to gobreaker.State) {
-			logger.Warning(fmt.Sprintf("circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
+			logger.Warning(fmt.Sprintf("[CB] Circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
 		}
 	}
 

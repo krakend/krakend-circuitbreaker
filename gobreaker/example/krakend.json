@@ -19,7 +19,7 @@
                         "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
                             "interval": 60,
                             "timeout": 10,
-                            "maxErrors": 1
+                            "max_errors": 1
                         }
                     }
                 },
@@ -34,7 +34,7 @@
                         "github.com/devopsfaith/krakend-circuitbreaker/gobreaker": {
                             "interval": 60,
                             "timeout": 10,
-                            "maxErrors": 1
+                            "max_errors": 1
                         }
                     }
                 }
