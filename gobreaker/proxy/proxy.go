@@ -26,11 +26,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/logging"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/logging"
+	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
 )
 
 // BackendFactory adds a cb middleware wrapping the internal factory

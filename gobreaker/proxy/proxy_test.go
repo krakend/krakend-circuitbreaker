@@ -6,17 +6,17 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
 	gologging "github.com/op/go-logging"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {
 	defer func() {
 		if r := recover(); r != proxy.ErrTooManyProxies {
-			t.Errorf("The code did not panic\n")
+			t.Error("The code did not panic")
 		}
 	}()
 

@@ -6,10 +6,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
 	gologging "github.com/op/go-logging"
 )
 
