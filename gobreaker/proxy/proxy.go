@@ -4,7 +4,7 @@ Package gobreaker provides a circuit breaker proxy middleware using the sony/gob
 Adding the middleware to your proxy stack
 
 	import (
-		"github.com/devopsfaith/krakend/proxy"
+		"github.com/devopsfaith/lura/v2/proxy"
 		gobreaker "github.com/devopsfaith/krakend-circuitbreaker/gobreaker/proxy"
 	)
 
