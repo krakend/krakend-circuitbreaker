@@ -6,13 +6,13 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/logging"
-	"github.com/luraproject/lura/proxy"
-	krakendgin "github.com/luraproject/lura/router/gin"
-	"github.com/luraproject/lura/transport/http/client"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/logging"
+	"github.com/luraproject/lura/v2/proxy"
+	krakendgin "github.com/luraproject/lura/v2/router/gin"
+	"github.com/luraproject/lura/v2/transport/http/client"
 
-	cbproxy "github.com/devopsfaith/krakend-circuitbreaker/eapache/proxy"
+	cbproxy "github.com/devopsfaith/krakend-circuitbreaker/v2/eapache/proxy"
 )
 
 func main() {

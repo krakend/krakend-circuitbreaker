@@ -9,11 +9,7 @@ require (
 	github.com/sony/gobreaker v0.4.1
 )
 
-require (
-	github.com/devopsfaith/krakend-circuitbreaker v1.4.0
-	github.com/luraproject/lura v1.4.0
-	github.com/luraproject/lura/v2 v2.0.0-dev
-)
+require github.com/luraproject/lura/v2 v2.0.0-dev
 
 require (
 	github.com/devopsfaith/flatmap v0.0.0-20200601181759-8521186182fc // indirect
