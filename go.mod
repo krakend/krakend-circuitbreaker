@@ -4,12 +4,12 @@ go 1.17
 
 require (
 	github.com/eapache/go-resiliency v1.2.0
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.7
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/sony/gobreaker v0.4.1
 )
 
-require github.com/luraproject/lura/v2 v2.0.0-dev
+require github.com/luraproject/lura/v2 v2.0.0
 
 require (
 	github.com/devopsfaith/flatmap v0.0.0-20200601181759-8521186182fc // indirect
