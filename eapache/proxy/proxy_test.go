@@ -7,10 +7,10 @@ import (
 	"testing"
 
 	"github.com/eapache/go-resiliency/breaker"
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 
-	"github.com/devopsfaith/krakend-circuitbreaker/eapache"
+	"github.com/devopsfaith/krakend-circuitbreaker/v2/eapache"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {

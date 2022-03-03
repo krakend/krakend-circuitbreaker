@@ -6,10 +6,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 
-	"github.com/devopsfaith/krakend-circuitbreaker/eapache"
+	"github.com/devopsfaith/krakend-circuitbreaker/v2/eapache"
 )
 
 func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {

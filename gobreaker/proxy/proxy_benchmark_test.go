@@ -6,10 +6,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
 	gologging "github.com/op/go-logging"
 )
 
@@ -47,9 +47,9 @@ func BenchmarkNewCircuitBreakerMiddleware_burst(b *testing.B) {
 var cfg = config.Backend{
 	ExtraConfig: map[string]interface{}{
 		gcb.Namespace: map[string]interface{}{
-			"interval":  100.0,
-			"timeout":   100.0,
-			"maxErrors": 1.0,
+			"interval":   100.0,
+			"timeout":    100.0,
+			"max_errors": 1.0,
 		},
 	},
 }

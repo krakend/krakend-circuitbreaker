@@ -4,7 +4,7 @@ Package gobreaker provides a circuit breaker proxy middleware using the sony/gob
 Adding the middleware to your proxy stack
 
 	import (
-		"github.com/devopsfaith/krakend/proxy"
+		"github.com/devopsfaith/lura/v2/proxy"
 		gobreaker "github.com/devopsfaith/krakend-circuitbreaker/gobreaker/proxy"
 	)
 
@@ -24,12 +24,13 @@ package proxy
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/logging"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/logging"
+	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/gobreaker"
+	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
 )
 
 // BackendFactory adds a cb middleware wrapping the internal factory
@@ -46,6 +47,8 @@ func NewMiddleware(remote *config.Backend, logger logging.Logger) proxy.Middlewa
 		return proxy.EmptyMiddleware
 	}
 	cb := gcb.NewCircuitBreaker(data, logger)
+
+	logger.Debug(fmt.Sprintf("[BACKEND: %s][CB] Creating the circuit breaker named '%s'", remote.URLPattern, data.Name))
 
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {
