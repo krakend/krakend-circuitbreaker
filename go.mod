@@ -1,4 +1,4 @@
-module github.com/devopsfaith/krakend-circuitbreaker/v2
+module github.com/krakendio/krakend-circuitbreaker/v2
 
 go 1.17
 
@@ -12,7 +12,7 @@ require (
 require github.com/luraproject/lura/v2 v2.0.0
 
 require (
-	github.com/devopsfaith/flatmap v0.0.0-20200601181759-8521186182fc // indirect
+	github.com/krakendio/flatmap v0.0.0-20200601181759-8521186182fc // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
