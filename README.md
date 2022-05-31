@@ -1,6 +1,6 @@
 # KrakenD circuit breakers
 
-A collection of circuit breaker adaptors for [KrakenD](https://github.com/devopsfaith/krakend-ce)
+A collection of circuit breaker adaptors for [KrakenD](https://github.com/krakendio/krakend-ce)
 
 ### gobreaker
 
