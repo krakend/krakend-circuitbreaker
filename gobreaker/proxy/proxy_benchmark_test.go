@@ -9,7 +9,7 @@ import (
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/devopsfaith/krakend-circuitbreaker/v2/gobreaker"
+	gcb "github.com/krakendio/krakend-circuitbreaker/v2/gobreaker"
 	gologging "github.com/op/go-logging"
 )
 
