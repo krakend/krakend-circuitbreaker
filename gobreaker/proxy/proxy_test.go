@@ -10,7 +10,7 @@ import (
 	"github.com/luraproject/lura/v2/proxy"
 
 	gcb "github.com/krakendio/krakend-circuitbreaker/v2/gobreaker"
-	gologging "github.com/op/go-logging"
+	"github.com/luraproject/lura/v2/logging"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {
@@ -20,7 +20,7 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 		}
 	}()
 
-	NewMiddleware(&config.Backend{}, gologging.MustGetLogger("proxy_test"))(proxy.NoopProxy, proxy.NoopProxy)
+	NewMiddleware(&config.Backend{}, logging.NoOp)(proxy.NoopProxy, proxy.NoopProxy)
 }
 
 func TestNewMiddleware_zeroConfig(t *testing.T) {
@@ -29,7 +29,7 @@ func TestNewMiddleware_zeroConfig(t *testing.T) {
 		{ExtraConfig: map[string]interface{}{gcb.Namespace: 42}},
 	} {
 		resp := proxy.Response{}
-		mdw := NewMiddleware(cfg, gologging.MustGetLogger("proxy_test"))
+		mdw := NewMiddleware(cfg, logging.NoOp)
 		p := mdw(dummyProxy(&resp, nil))
 
 		request := proxy.Request{
@@ -59,7 +59,7 @@ func TestNewMiddleware_ok(t *testing.T) {
 				"max_errors": 1.0,
 			},
 		},
-	}, gologging.MustGetLogger("proxy_test"))
+	}, logging.NoOp)
 	p := mdw(dummyProxy(&resp, nil))
 
 	request := proxy.Request{
@@ -90,7 +90,7 @@ func TestNewMiddleware_ko(t *testing.T) {
 				"log_status_change": true,
 			},
 		},
-	}, gologging.MustGetLogger("proxy_test"))
+	}, logging.NoOp)
 	p := mdw(func(_ context.Context, _ *proxy.Request) (*proxy.Response, error) {
 		total := atomic.AddUint64(&calls, 1)
 		if total > 2 {

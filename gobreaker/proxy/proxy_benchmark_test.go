@@ -10,11 +10,11 @@ import (
 	"github.com/luraproject/lura/v2/proxy"
 
 	gcb "github.com/krakendio/krakend-circuitbreaker/v2/gobreaker"
-	gologging "github.com/op/go-logging"
+	"github.com/luraproject/lura/v2/logging"
 )
 
 func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {
-	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(dummyProxy(&proxy.Response{}, nil))
+	p := NewMiddleware(&cfg, logging.NoOp)(dummyProxy(&proxy.Response{}, nil))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
@@ -24,7 +24,7 @@ func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {
 }
 
 func BenchmarkNewCircuitBreakerMiddleware_ko(b *testing.B) {
-	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(dummyProxy(nil, errors.New("sample error")))
+	p := NewMiddleware(&cfg, logging.NoOp)(dummyProxy(nil, errors.New("sample error")))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
@@ -35,7 +35,7 @@ func BenchmarkNewCircuitBreakerMiddleware_ko(b *testing.B) {
 
 func BenchmarkNewCircuitBreakerMiddleware_burst(b *testing.B) {
 	err := errors.New("sample error")
-	p := NewMiddleware(&cfg, gologging.MustGetLogger("proxy_test"))(burstProxy(&proxy.Response{}, err, 100, 6))
+	p := NewMiddleware(&cfg, logging.NoOp)(burstProxy(&proxy.Response{}, err, 100, 6))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p(context.Background(), &proxy.Request{
