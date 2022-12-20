@@ -99,7 +99,7 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBrea
 		Interval: time.Duration(cfg.Interval) * time.Second,
 		Timeout:  time.Duration(cfg.Timeout) * time.Second,
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
-			return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
+			return counts.ConsecutiveFailures >= uint32(cfg.MaxErrors)
 		},
 	}
 
