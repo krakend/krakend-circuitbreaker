@@ -3,7 +3,7 @@ Package eapache provides a circuit breaker proxy middleware using the github.com
 
 Adding the middleware to your proxy stack
 
-	import eapache "github.com/krakendio/krakend-circuitbreaker/eapache/proxy"
+	import eapache "github.com/krakend/krakend-circuitbreaker/v2/eapache/proxy"
 
 	...
 
@@ -15,7 +15,6 @@ Adding the middleware to your proxy stack
 	p = eapache.NewMiddleware(backend)(p)
 
 	...
-
 */
 package proxy
 
@@ -25,7 +24,7 @@ import (
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 
-	"github.com/krakendio/krakend-circuitbreaker/v2/eapache"
+	"github.com/krakend/krakend-circuitbreaker/v2/eapache"
 )
 
 // BackendFactory adds a cb middleware wrapping the internal factory

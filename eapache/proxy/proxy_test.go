@@ -10,7 +10,7 @@ import (
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 
-	"github.com/krakendio/krakend-circuitbreaker/v2/eapache"
+	"github.com/krakend/krakend-circuitbreaker/v2/eapache"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {
@@ -19,7 +19,14 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 			t.Errorf("The code did not panic\n")
 		}
 	}()
-	NewMiddleware(&config.Backend{})(proxy.NoopProxy, proxy.NoopProxy)
+	NewMiddleware(&config.Backend{
+		ExtraConfig: config.ExtraConfig{
+			eapache.Namespace: map[string]interface{}{
+				"error": 1,
+			},
+		},
+	},
+	)(proxy.NoopProxy, proxy.NoopProxy)
 }
 
 func TestNewMiddleware_zeroConfig(t *testing.T) {
