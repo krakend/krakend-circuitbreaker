@@ -20,7 +20,14 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 		}
 	}()
 
-	NewMiddleware(&config.Backend{}, logging.NoOp)(proxy.NoopProxy, proxy.NoopProxy)
+	NewMiddleware(&config.Backend{
+		ExtraConfig: config.ExtraConfig{
+			gcb.Namespace: map[string]interface{}{
+				"name":     "something",
+				"interval": 1,
+			},
+		},
+	}, logging.NoOp)(proxy.NoopProxy, proxy.NoopProxy)
 }
 
 func TestNewMiddleware_zeroConfig(t *testing.T) {

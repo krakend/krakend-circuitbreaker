@@ -19,7 +19,14 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 			t.Errorf("The code did not panic\n")
 		}
 	}()
-	NewMiddleware(&config.Backend{})(proxy.NoopProxy, proxy.NoopProxy)
+	NewMiddleware(&config.Backend{
+		ExtraConfig: config.ExtraConfig{
+			eapache.Namespace: map[string]interface{}{
+				"error": 1,
+			},
+		},
+	},
+	)(proxy.NoopProxy, proxy.NoopProxy)
 }
 
 func TestNewMiddleware_zeroConfig(t *testing.T) {
