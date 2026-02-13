@@ -22,12 +22,14 @@ and https://martinfowler.com/bliki/CircuitBreaker.html for more details.
 package gobreaker
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/logging"
-	"github.com/sony/gobreaker"
+	"github.com/sony/gobreaker/v2"
 )
 
 // Namespace is the key to use to store and access the custom config data
@@ -92,14 +94,25 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	return cfg
 }
 
+type CircuitBreaker struct {
+	cb *gobreaker.CircuitBreaker[interface{}]
+}
+
+func (c *CircuitBreaker) Execute(req func() (interface{}, error)) (interface{}, error) {
+	return c.cb.Execute(req)
+}
+
 // NewCircuitBreaker builds a gobreaker circuit breaker with the injected config
-func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBreaker {
+func NewCircuitBreaker(cfg Config, logger logging.Logger) CircuitBreaker {
 	settings := gobreaker.Settings{
 		Name:     cfg.Name,
 		Interval: time.Duration(cfg.Interval) * time.Second,
 		Timeout:  time.Duration(cfg.Timeout) * time.Second,
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
 			return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
+		},
+		IsExcluded: func(err error) bool {
+			return errors.Is(err, context.Canceled)
 		},
 	}
 
@@ -109,5 +122,5 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) *gobreaker.CircuitBrea
 		}
 	}
 
-	return gobreaker.NewCircuitBreaker(settings)
+	return CircuitBreaker{cb: gobreaker.NewCircuitBreaker[interface{}](settings)}
 }
