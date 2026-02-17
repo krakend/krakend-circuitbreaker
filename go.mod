@@ -1,4 +1,4 @@
-module github.com/krakend/krakend-circuitbreaker/v2
+module github.com/krakend/krakend-circuitbreaker/v3
 
 go 1.23.0
 

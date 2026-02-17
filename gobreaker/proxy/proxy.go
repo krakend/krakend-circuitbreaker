@@ -29,7 +29,7 @@ import (
 	"github.com/luraproject/lura/v2/logging"
 	"github.com/luraproject/lura/v2/proxy"
 
-	gcb "github.com/krakend/krakend-circuitbreaker/v2/gobreaker"
+	gcb "github.com/krakend/krakend-circuitbreaker/v3/gobreaker"
 )
 
 // BackendFactory adds a cb middleware wrapping the internal factory

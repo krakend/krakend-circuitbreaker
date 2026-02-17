@@ -9,7 +9,7 @@ import (
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 
-	"github.com/krakend/krakend-circuitbreaker/v2/eapache"
+	"github.com/krakend/krakend-circuitbreaker/v3/eapache"
 )
 
 func BenchmarkNewCircuitBreakerMiddleware_ok(b *testing.B) {
