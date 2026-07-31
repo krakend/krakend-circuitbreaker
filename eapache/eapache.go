@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/eapache/go-resiliency/breaker"
-	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v3/config"
 )
 
 // Namespace is the key to use to store and access the custom config data
