@@ -47,7 +47,8 @@ func NewMiddleware(remote *config.Backend, logger logging.Logger) proxy.Middlewa
 	}
 	cb := gcb.NewCircuitBreaker(data, logger)
 
-	logger.Debug(fmt.Sprintf("[BACKEND: %s][CB] Creating the circuit breaker named '%s'", remote.URLPattern, data.Name))
+	logger.Debug(fmt.Sprintf("[BACKEND: %s %s -> %s %s][CB] Creating the circuit breaker named '%s'",
+		remote.ParentEndpointMethod, remote.ParentEndpoint, remote.Method, remote.URLPattern, data.Name))
 
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {
