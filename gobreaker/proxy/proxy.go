@@ -41,13 +41,17 @@ func BackendFactory(next proxy.BackendFactory, logger logging.Logger) proxy.Back
 
 // NewMiddleware builds a middleware based on the extra config params or fallbacks to the next proxy
 func NewMiddleware(remote *config.Backend, logger logging.Logger) proxy.Middleware {
-	data := gcb.ConfigGetter(remote.ExtraConfig).(gcb.Config)
-	if data == gcb.ZeroCfg {
+	data, ok := gcb.ConfigGetter(remote.ExtraConfig).(gcb.Config)
+	if !ok {
 		return proxy.EmptyMiddleware
 	}
-	cb := gcb.NewCircuitBreaker(data, logger)
-
 	logger.Debug(fmt.Sprintf("[BACKEND: %s][CB] Creating the circuit breaker named '%s'", remote.URLPattern, data.Name))
+
+	return NewMiddlewareWithConfig(data, logger)
+}
+
+func NewMiddlewareWithConfig(cfg gcb.Config, logger logging.Logger) proxy.Middleware {
+	cb := gcb.NewCircuitBreaker(cfg, logger)
 
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {
