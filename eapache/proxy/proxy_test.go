@@ -7,10 +7,10 @@ import (
 	"testing"
 
 	"github.com/eapache/go-resiliency/breaker"
-	"github.com/luraproject/lura/v2/config"
-	"github.com/luraproject/lura/v2/proxy"
+	"github.com/luraproject/lura/v3/config"
+	"github.com/luraproject/lura/v3/proxy"
 
-	"github.com/krakend/krakend-circuitbreaker/v3/eapache"
+	"github.com/krakend/krakend-circuitbreaker/v4/eapache"
 )
 
 func TestNewMiddleware_multipleNext(t *testing.T) {
@@ -19,13 +19,14 @@ func TestNewMiddleware_multipleNext(t *testing.T) {
 			t.Errorf("The code did not panic\n")
 		}
 	}()
-	NewMiddleware(&config.Backend{
-		ExtraConfig: config.ExtraConfig{
-			eapache.Namespace: map[string]interface{}{
-				"error": 1,
+	NewMiddleware(
+		&config.Backend{
+			ExtraConfig: config.ExtraConfig{
+				eapache.Namespace: map[string]interface{}{
+					"error": 1,
+				},
 			},
 		},
-	},
 	)(proxy.NoopProxy, proxy.NoopProxy)
 }
 
