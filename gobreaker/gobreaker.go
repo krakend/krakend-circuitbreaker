@@ -128,7 +128,10 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) CircuitBreaker {
 
 	settings.ReadyToTrip = func(counts gobreaker.Counts) bool {
 		cfg.ErrorsEvent(context.Background(),
-			Event{ErrorCount: counts})
+			Event{
+				Name:       cfg.Name,
+				ErrorCount: counts,
+			})
 		return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
 	}
 
