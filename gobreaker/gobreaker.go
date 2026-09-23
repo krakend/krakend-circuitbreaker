@@ -42,21 +42,32 @@ type Config struct {
 	Timeout         int
 	MaxErrors       int
 	LogStatusChange bool
+
+	StateEvent  func(context.Context, Event)
+	ErrorsEvent func(context.Context, Event)
 }
 
-// ZeroCfg is the zero value for the Config struct
-var ZeroCfg = Config{}
+type Event struct {
+	Name        string
+	ErrorCount  gobreaker.Counts
+	StateChange int
+}
+
+var (
+	defaultStateEvent  = func(_ context.Context, _ Event) {}
+	defaultErrorsEvent = func(_ context.Context, _ Event) {}
+)
 
 // ConfigGetter implements the config.ConfigGetter interface. It parses the extra config for the
 // gobreaker adapter and returns a ZeroCfg if something goes wrong.
 func ConfigGetter(e config.ExtraConfig) interface{} {
 	v, ok := e[Namespace]
 	if !ok {
-		return ZeroCfg
+		return nil
 	}
 	tmp, ok := v.(map[string]interface{})
 	if !ok {
-		return ZeroCfg
+		return nil
 	}
 	cfg := Config{}
 	if v, ok := tmp["name"]; ok {
@@ -91,6 +102,8 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 	value, ok := tmp["log_status_change"].(bool)
 	cfg.LogStatusChange = ok && value
 
+	cfg.ErrorsEvent = defaultErrorsEvent
+	cfg.StateEvent = defaultStateEvent
 	return cfg
 }
 
@@ -108,19 +121,55 @@ func NewCircuitBreaker(cfg Config, logger logging.Logger) CircuitBreaker {
 		Name:     cfg.Name,
 		Interval: time.Duration(cfg.Interval) * time.Second,
 		Timeout:  time.Duration(cfg.Timeout) * time.Second,
-		ReadyToTrip: func(counts gobreaker.Counts) bool {
-			return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
-		},
 		IsExcluded: func(err error) bool {
 			return errors.Is(err, context.Canceled)
 		},
 	}
 
-	if cfg.LogStatusChange {
-		settings.OnStateChange = func(name string, from gobreaker.State, to gobreaker.State) {
+	settings.ReadyToTrip = func(counts gobreaker.Counts) bool {
+		cfg.ErrorsEvent(context.Background(),
+			Event{
+				Name:       cfg.Name,
+				ErrorCount: counts,
+			})
+		return counts.ConsecutiveFailures > uint32(cfg.MaxErrors)
+	}
+
+	settings.OnStateChange = func(name string, from gobreaker.State, to gobreaker.State) {
+		if t, err := transition(from, to); err == nil {
+			cfg.StateEvent(context.Background(),
+				Event{
+					Name:        name,
+					StateChange: t,
+				})
+		}
+		if cfg.LogStatusChange {
 			logger.Warning(fmt.Sprintf("[CB] Circuit breaker named '%s' went from '%s' to '%s'", name, from.String(), to.String()))
 		}
 	}
 
 	return CircuitBreaker{cb: gobreaker.NewCircuitBreaker[interface{}](settings)}
+}
+
+const (
+	CLOSETOOPEN int = iota
+	OPENTOHALF
+	HALFTOOPEN
+	HALFTOCLOSE
+)
+
+func transition(from, to gobreaker.State) (int, error) {
+	switch from {
+	case 0:
+		return CLOSETOOPEN, nil
+	case 1:
+		if to == 0 {
+			return HALFTOCLOSE, nil
+		}
+		return HALFTOOPEN, nil
+	case 2:
+		return OPENTOHALF, nil
+	default:
+	}
+	return 0, fmt.Errorf("invalid cb state %d", from)
 }
